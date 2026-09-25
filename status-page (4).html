@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #1f9d55; /* green background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: system-ui, sans-serif;
+    color: white;
+  }
+
+  .spinner {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 8px solid rgba(255,255,255,0.3);
+    border-top: 8px solid #1e90ff; /* blue circle */
+    animation: spin 0.9s linear infinite;
+    display: none;
+    margin-bottom: 20px;
+  }
+
+  .spinner.active {
+    display: block;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #1f9d55;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  #status-text {
+    margin-top: 15px;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+
+  .cars {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 30px;
+  }
+
+  .car {
+    animation: drive 1.5s ease-in-out infinite;
+    cursor: pointer;
+  }
+
+  .car:nth-child(2) { animation-delay: 0.3s; }
+  .car:nth-child(3) { animation-delay: 0.6s; }
+
+  @keyframes drive {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+</style>
+</head>
+<body>
+
+  <div class="cars">
+    <svg class="car" id="car-red" viewBox="0 0 120 50" width="110">
+      <path d="M10,35 L15,20 Q20,10 35,10 L75,10 Q90,10 95,20 L105,35 Z" fill="#ff4d4d" stroke="#a30000" stroke-width="1.5"/>
+      <path d="M25,20 Q30,14 40,14 L65,14 Q73,14 78,20 L78,22 L25,22 Z" fill="#cfefff" opacity="0.85"/>
+      <rect x="8" y="33" width="104" height="8" rx="3" fill="#ff4d4d" stroke="#a30000" stroke-width="1.5"/>
+      <circle cx="30" cy="42" r="8" fill="#222"/>
+      <circle cx="30" cy="42" r="3" fill="#888"/>
+      <circle cx="90" cy="42" r="8" fill="#222"/>
+      <circle cx="90" cy="42" r="3" fill="#888"/>
+      <circle cx="14" cy="26" r="2.5" fill="#fff59d"/>
+      <circle cx="106" cy="26" r="2.5" fill="#ff8a8a"/>
+    </svg>
+    <svg class="car" id="car-yellow" viewBox="0 0 120 50" width="110">
+      <path d="M10,35 L15,20 Q20,10 35,10 L75,10 Q90,10 95,20 L105,35 Z" fill="#ffd93d" stroke="#b38f00" stroke-width="1.5"/>
+      <path d="M25,20 Q30,14 40,14 L65,14 Q73,14 78,20 L78,22 L25,22 Z" fill="#cfefff" opacity="0.85"/>
+      <rect x="8" y="33" width="104" height="8" rx="3" fill="#ffd93d" stroke="#b38f00" stroke-width="1.5"/>
+      <circle cx="30" cy="42" r="8" fill="#222"/>
+      <circle cx="30" cy="42" r="3" fill="#888"/>
+      <circle cx="90" cy="42" r="8" fill="#222"/>
+      <circle cx="90" cy="42" r="3" fill="#888"/>
+      <circle cx="14" cy="26" r="2.5" fill="#fff59d"/>
+      <circle cx="106" cy="26" r="2.5" fill="#ff8a8a"/>
+    </svg>
+    <svg class="car" id="car-blue" viewBox="0 0 120 50" width="110">
+      <path d="M10,35 L15,20 Q20,10 35,10 L75,10 Q90,10 95,20 L105,35 Z" fill="#4da6ff" stroke="#0b5fa8" stroke-width="1.5"/>
+      <path d="M25,20 Q30,14 40,14 L65,14 Q73,14 78,20 L78,22 L25,22 Z" fill="#cfefff" opacity="0.85"/>
+      <rect x="8" y="33" width="104" height="8" rx="3" fill="#4da6ff" stroke="#0b5fa8" stroke-width="1.5"/>
+      <circle cx="30" cy="42" r="8" fill="#222"/>
+      <circle cx="30" cy="42" r="3" fill="#888"/>
+      <circle cx="90" cy="42" r="8" fill="#222"/>
+      <circle cx="90" cy="42" r="3" fill="#888"/>
+      <circle cx="14" cy="26" r="2.5" fill="#fff59d"/>
+      <circle cx="106" cy="26" r="2.5" fill="#ff8a8a"/>
+    </svg>
+  </div>
+
+  <div class="spinner" id="spinner"></div>
+  <button id="run-btn">Run</button>
+  <div id="status-text">Idle</div>
+
+  <script>
+    document.getElementById('car-red').addEventListener('click', () => {
+      alert('You look pretty 🌹');
+    });
+    document.getElementById('car-yellow').addEventListener('click', () => {
+      alert("You're mine 💛");
+    });
+    document.getElementById('car-blue').addEventListener('click', () => {
+      alert('You are my world 🌍');
+    });
+
+    const btn = document.getElementById('run-btn');
+    const spinner = document.getElementById('spinner');
+    const statusText = document.getElementById('status-text');
+
+    btn.addEventListener('click', () => {
+      const request = prompt("What do you want?");
+
+      // if they cancel or leave it empty, don't run
+      if (!request) {
+        return;
+      }
+
+      // show blue circle while "working"
+      spinner.classList.add('active');
+      statusText.textContent = 'Working on: ' + request;
+      btn.disabled = true;
+
+      // simulate work — replace this with your real task
+      setTimeout(() => {
+        spinner.classList.remove('active');
+        statusText.textContent = 'Done: ' + request + ' — "If you want something, you must work hard for it."';
+        btn.disabled = false;
+      }, 2000);
+    });
+  </script>
+
+</body>
+</html>
